@@ -1,1 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nossa Escola | Cursos</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+<header class="topbar">
+ <div class="container nav">
+   <a href="#inicio" class="brand">Nossa Escola</a>
+
+   <nav class="menu" aria-label="Principal">
+     <a href="#inicio">Início</a>
+     <a href="#quem-somos">Quem Somos</a>
+     <a href="#cursos">Cursos</a>
+     <a href="#contato">Contato</a>
+     <a href="#login" class="login-cta">Login</a>
+   </nav>
+
+   <button class="hamburger" id="hamburger" aria-label="Abrir menu">☰</button>
+ </div>
+</header>
+
+<main>
+ <!-- INÍCIO -->
+ <section id="inicio" class="section hero">
+   <div class="container">
+     <h1>Bem-vindo à Nossa Escola</h1>
+     <p>Conhecimento na prática, projetos reais e comunidade engajada.</p>
+     <a href="#cursos" class="btn">Ver Cursos</a>
+   </div>
+ </section>
+
+ <!-- QUEM SOMOS -->
+ <section id="quem-somos" class="section alt">
+   <div class="container grid-2">
+     <div>
+       <h2>Quem Somos</h2>
+       <p>
+         Somos uma escola focada em tecnologia e desenvolvimento de projetos.
+         Aprenda HTML, CSS, JavaScript e frameworks modernos com atividades guiadas.
+       </p>
+     </div>
+     <div class="card">
+       <h3>Nossa Missão</h3>
+       <p>Transformar alunos em criadores através de projetos práticos e colaboração.</p>
+     </div>
+   </div>
+ </section>
+
+ <!-- CURSOS -->
+ <section id="cursos" class="section">
+   <div class="container">
+     <h2>Cursos</h2>
+     <div class="cards">
+       <article class="card">
+         <h3>Desenvolvimento Web</h3>
+         <p>HTML, CSS, JS do zero ao deploy.</p>
+       </article>
+       <article class="card">
+         <h3>Banco de Dados</h3>
+         <p>Modelagem, SQL e NoSQL na prática.</p>
+       </article>
+       <article class="card">
+         <h3>Projetos</h3>
+         <p>Trilhas guiadas com desafios e mentoria.</p>
+       </article>
+     </div>
+   </div>
+ </section>
+
+ <!-- CONTATO -->
+ <section id="contato" class="section alt">
+   <div class="container grid-2">
+     <div>
+       <h2>Contato</h2>
+       <p><strong>WhatsApp:</strong> (41) 9.9999-9999</p>
+       <p><strong>E-mail:</strong> contato@nossaescola.edu.br</p>
+       <p><strong>Endereço:</strong> Rua Exemplo, 123 – Curitiba/PR</p>
+     </div>
+     <div class="card">
+       <h3>Atendimento</h3>
+       <p>Seg–Sex, 8h às 18h</p>
+     </div>
+   </div>
+ </section>
+
+ <!-- LOGIN / CADASTRO -->
+ <section id="login" class="section">
+   <div class="container auth">
+     <div class="tabs">
+       <button class="tab active" data-tab="login-pane">Entrar</button>
+       <button class="tab" data-tab="register-pane">Cadastrar</button>
+     </div>
+
+     <!-- ENTRAR -->
+     <div id="login-pane" class="pane active" role="tabpanel">
+       <form id="loginForm" class="form">
+         <div class="field">
+           <label for="loginUser">Usuário ou e-mail</label>
+           <input id="loginUser" type="text" placeholder="seuusuario ou seu@email.com" required />
+         </div>
+         <div class="field">
+           <label for="loginPass">Senha</label>
+           <input id="loginPass" type="password" placeholder="******" required />
+         </div>
+         <button type="submit" class="btn full">Entrar</button>
+       </form>
+       <p class="muted center">Não tem conta? <a href="#" id="toRegister">Cadastrar</a></p>
+     </div>
+
+     <!-- CADASTRAR -->
+     <div id="register-pane" class="pane" role="tabpanel" aria-hidden="true">
+       <form id="registerForm" class="form">
+         <div class="grid-2">
+           <div class="field">
+             <label for="regNome">Nome completo</label>
+             <input id="regNome" type="text" placeholder="Ex.: Maria Silva" required />
+           </div>
+           <div class="field">
+             <label for="regNascimento">Data de nascimento</label>
+             <input id="regNascimento" type="date" required />
+           </div>
+         </div>
+
+         <div class="grid-2">
+           <div class="field">
+             <label for="regEmail">E-mail</label>
+             <input id="regEmail" type="email" placeholder="voce@email.com" required />
+           </div>
+           <div class="field">
+             <label for="regTelefone">Telefone</label>
+             <input id="regTelefone" type="tel" placeholder="(41) 9 9999-9999" />
+           </div>
+         </div>
+
+         <div class="grid-2">
+           <div class="field">
+             <label for="regUsuario">Usuário (login)</label>
+             <input id="regUsuario" type="text" placeholder="seuusuario" minlength="3" pattern="^[a-zA-Z0-9._-]{3,}$" required />
+             <small class="muted">Use letras, números, ponto, traço ou underscore.</small>
+           </div>
+           <div class="field">
+             <label for="regSenha">Senha</label>
+             <input id="regSenha" type="password" placeholder="mín. 6 caracteres" minlength="6" required />
+           </div>
+         </div>
+
+         <button type="submit" class="btn full">Criar conta</button>
+       </form>
+     </div>
+
+     <div id="authMsg" class="msg" aria-live="polite"></div>
+
+     <!-- ÁREA LOGADA (exemplo simples) -->
+     <div id="privateArea" class="private hidden">
+       <h3>Área do aluno</h3>
+       <p id="welcomeUser">Bem-vindo!</p>
+       <button id="logoutBtn" class="btn ghost">Sair</button>
+     </div>
+   </div>
+ </section>
+</main>
+
+<footer class="footer">
+ <div class="container">
+   <p>©2025 | Curso de ADS | Profº Antonio Carlos</p>
+ </div>
+</footer>
+
+<!-- Seu app JS (módulo para usar Firebase v9+) -->
+<script type="module" src="script.js"></script>
+</body>
+</html>
 
