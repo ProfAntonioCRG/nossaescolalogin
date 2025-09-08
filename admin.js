@@ -1,8 +1,8 @@
 // admin.js
 
 // ===== CONFIG SUPABASE =====
-const SUPABASE_URL = "https://SEU_PROJECT_REF.supabase.co";
-const SUPABASE_ANON_KEY = "SUA_ANON_KEY";
+const SUPABASE_URL = "https://cnncldeuhpmmkeqqoxjl.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNubmNsZGV1aHBtbWtlcXFveGpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NDkzMjYsImV4cCI6MjA3MjUyNTMyNn0._6ex1_Rq4LCj3LteC4uo66_a4aJpFK1oUP0ozzdvftw";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ===== ELEMENTOS =====
