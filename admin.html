@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Gerenciar Cadastros</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="container section">
+    <h2>Gerenciar Cadastros</h2>
+
+    <table id="usersTable" border="1" cellpadding="8" style="width:100%; border-collapse:collapse; margin-top:20px;">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Nascimento</th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th>Usuário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div id="editFormContainer" class="hidden" style="margin-top:30px;">
+      <h3>Editar Cadastro</h3>
+      <form id="editForm" class="form">
+        <input type="hidden" id="editId">
+        <div class="field"><label>Nome completo</label><input id="editNome" required /></div>
+        <div class="field"><label>Nascimento</label><input id="editNascimento" type="date" /></div>
+        <div class="field"><label>Email</label><input id="editEmail" type="email" required /></div>
+        <div class="field"><label>Telefone</label><input id="editTelefone" /></div>
+        <div class="field"><label>Usuário</label><input id="editUsuario" required /></div>
+        <button type="submit" class="btn">Salvar</button>
+        <button type="button" id="cancelEdit" class="btn ghost">Cancelar</button>
+      </form>
+    </div>
+
+    <div id="msg" class="msg"></div>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
