@@ -1,59 +1,14 @@
-// app.js (usar como <script type="module" src="app.js"></script>)
+// app.js
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-// ====== MENU RESPONSIVO ======
-const hamburger = document.getElementById('hamburger');
-const menu = document.querySelector('.menu');
-if (hamburger) {
-  hamburger.addEventListener('click', () => menu.classList.toggle('open'));
-}
+// ===== CONFIG SUPABASE =====
+const SUPABASE_URL = "https://SEU-PROJECT_REF.supabase.co";   // troque
+const SUPABASE_ANON_KEY = "SUA_ANON_KEY_PUBLICA";             // troque
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ====== TROCA DE ABAS LOGIN/CADASTRO ======
+// ===== ELEMENTOS =====
 const tabs = document.querySelectorAll('.tab');
 const panes = document.querySelectorAll('.pane');
-const toRegister = document.getElementById('toRegister');
-
-tabs.forEach(btn => {
-  btn.addEventListener('click', () => {
-    tabs.forEach(b => b.classList.remove('active'));
-    panes.forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
-  });
-});
-
-if (toRegister) {
-  toRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.querySelector('.tab[data-tab="register-pane"]').click();
-  });
-}
-
-// ====== FIREBASE (CDN v9+ modular) ======
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getAuth, onAuthStateChanged, signOut,
-  createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getFirestore, doc, setDoc, getDocs, collection, query, where, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-// 1) Cole aqui os dados do seu app (Project settings → Your apps → Web app)
-const firebaseConfig = {
-  apiKey: "COLE_AQUI",
-  authDomain: "COLE_AQUI.firebaseapp.com",
-  projectId: "COLE_AQUI",
-  storageBucket: "COLE_AQUI.appspot.com",
-  messagingSenderId: "COLE_AQUI",
-  appId: "COLE_AQUI"
-};
-
-// 2) Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// ====== ELEMENTOS ======
 const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 const authMsg = document.getElementById('authMsg');
@@ -66,79 +21,56 @@ const showMsg = (text, type = "success") => {
   authMsg.textContent = text;
   authMsg.className = `msg ${type}`;
 };
-
 const clearMsg = () => showMsg("");
 
-// ====== FUNÇÕES AUXILIARES FIRESTORE ======
+// ===== TROCA DE ABAS =====
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabs.forEach(b => b.classList.remove('active'));
+    panes.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
 
-// Verifica se "usuario" já existe
-async function usernameExists(usuario) {
-  const q = query(collection(db, "users"), where("usuario", "==", usuario));
-  const snap = await getDocs(q);
-  return !snap.empty;
-}
-
-// Recupera e-mail pelo "usuario" (para login com usuário)
-async function emailFromUsername(usuario) {
-  const q = query(collection(db, "users"), where("usuario", "==", usuario));
-  const snap = await getDocs(q);
-  if (snap.empty) return null;
-  const docData = snap.docs[0].data();
-  return docData?.email ?? null;
-}
-
-// ====== CADASTRO ======
+// ===== CADASTRO =====
 if (registerForm) {
   registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearMsg();
 
     const nome = document.getElementById('regNome').value.trim();
-    const dataNascimento = document.getElementById('regNascimento').value;
+    const dataNascimento = document.getElementById('regNascimento').value || null;
     const email = document.getElementById('regEmail').value.trim().toLowerCase();
     const telefone = document.getElementById('regTelefone').value.trim();
     const usuario = document.getElementById('regUsuario').value.trim().toLowerCase();
     const senha = document.getElementById('regSenha').value;
 
     try {
-      // 1) Garante usuário único
-      if (await usernameExists(usuario)) {
-        showMsg("Este usuário já está em uso. Tente outro.", "error");
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: senha,
+        options: {
+          data: { full_name: nome, dob: dataNascimento, phone: telefone, username: usuario }
+        }
+      });
+
+      if (error) {
+        showMsg("Erro ao cadastrar: " + error.message, "error");
         return;
       }
 
-      // 2) Cria conta no Auth
-      const cred = await createUserWithEmailAndPassword(auth, email, senha);
-
-      // 3) Atualiza displayName (opcional)
-      await updateProfile(cred.user, { displayName: usuario });
-
-      // 4) Salva perfil no Firestore (doc = uid)
-      await setDoc(doc(db, "users", cred.user.uid), {
-        uid: cred.user.uid,
-        nome,
-        dataNascimento,
-        email,
-        telefone,
-        usuario,               // login público
-        createdAt: serverTimestamp()
-      });
-
-      showMsg("Conta criada com sucesso! Você já está logado.", "success");
+      showMsg("Conta criada! Verifique seu e-mail se precisar confirmar.", "success");
       registerForm.reset();
-      document.querySelector('.tab[data-tab="login-pane"]').click(); // volta à aba login
-
+      document.querySelector('.tab[data-tab="login-pane"]').click();
     } catch (err) {
       console.error(err);
-      // Mensagens comuns do Firebase
-      if (err.code === "auth/weak-password") showMsg("Senha muito fraca (mín. 6).", "error");
-      else if (err.code === "auth/email-already-in-use") showMsg("E-mail já em uso.", "error");
-      else showMsg("Erro ao cadastrar. Verifique os dados e tente novamente.", "error");
+      showMsg("Erro inesperado ao cadastrar.", "error");
     }
   });
 }
 
-// ====== LOGIN ======
+// ===== LOGIN =====
 if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -148,47 +80,39 @@ if (loginForm) {
     const pass = document.getElementById('loginPass').value;
 
     try {
-      // Se não digitou e-mail (sem @), busca o e-mail pelo "usuario"
-      if (!userOrEmail.includes('@')) {
-        const email = await emailFromUsername(userOrEmail);
-        if (!email) {
-          showMsg("Usuário não encontrado.", "error");
-          return;
-        }
-        userOrEmail = email;
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: userOrEmail,
+        password: pass
+      });
+
+      if (error) {
+        showMsg("Erro ao entrar: " + error.message, "error");
+        return;
       }
 
-      await signInWithEmailAndPassword(auth, userOrEmail, pass);
       showMsg("Login realizado com sucesso!", "success");
       loginForm.reset();
     } catch (err) {
       console.error(err);
-      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
-        showMsg("Credenciais inválidas. Confira usuário/e-mail e senha.", "error");
-      } else if (err.code === "auth/user-not-found") {
-        showMsg("Usuário não encontrado.", "error");
-      } else {
-        showMsg("Erro ao entrar. Tente novamente.", "error");
-      }
+      showMsg("Erro inesperado no login.", "error");
     }
   });
 }
 
-// ====== ESTADO DE AUTENTICAÇÃO ======
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
+// ===== ESTADO DE AUTENTICAÇÃO =====
+supabase.auth.onAuthStateChange((_event, session) => {
+  if (session?.user) {
     privateArea.classList.remove('hidden');
-    welcomeUser.textContent = `Bem-vindo, ${user.displayName || user.email}!`;
+    welcomeUser.textContent = `Bem-vindo, ${session.user.user_metadata?.full_name || session.user.email}!`;
   } else {
     privateArea.classList.add('hidden');
   }
 });
 
-// ====== LOGOUT ======
+// ===== LOGOUT =====
 if (logoutBtn) {
   logoutBtn.addEventListener('click', async () => {
-    await signOut(auth);
+    await supabase.auth.signOut();
     showMsg("Você saiu da conta.", "success");
   });
 }
-
