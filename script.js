@@ -2,8 +2,8 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 // ===== CONFIG SUPABASE =====
-const SUPABASE_URL = "https://SEU-PROJECT_REF.supabase.co";   // troque
-const SUPABASE_ANON_KEY = "SUA_ANON_KEY_PUBLICA";             // troque
+const SUPABASE_URL = "https://cnncldeuhpmmkeqqoxjl.supabase.co";   // troque
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNubmNsZGV1aHBtbWtlcXFveGpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NDkzMjYsImV4cCI6MjA3MjUyNTMyNn0._6ex1_Rq4LCj3LteC4uo66_a4aJpFK1oUP0ozzdvftw";             // troque
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ===== ELEMENTOS =====
