@@ -28,7 +28,7 @@ function showMsg(text, type = "success") {
     return;
   }
 
-  if (user.email !== "profeantonio") {
+  if (user.email !== "profeantonio@email.com") {
     alert("Acesso negado. Somente admin pode entrar.");
     window.location.href = "index.html";
     return;
